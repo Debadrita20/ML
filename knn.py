@@ -1,4 +1,6 @@
 import random
+import sys
+
 import numpy as np
 import pandas
 from sklearn.neighbors import KNeighborsClassifier
@@ -55,7 +57,10 @@ if __name__ == '__main__':
     if k<=0:
         print('Invalid input')
         exit()
-    file = 'IRIS.csv'
+    if len(sys.argv)>1:
+        file = sys.argv[1]
+    else:
+        file= 'IRIS.csv'
     dataset = pandas.read_csv(file)
     # split into training and test data
     split=int(input('Enter the value for splitting: (e.g. if you want to split the data as 75-25 (training-test), '
@@ -74,9 +79,14 @@ if __name__ == '__main__':
     test = []
     results_test=[]
     for i in range(len(dataset)):
-        row = [dataset['sepal_length'][i], dataset['sepal_width'][i], dataset['petal_length'][i],
-               dataset['petal_width'][i]]
-        result=dataset['species'][i]
+        row=[]
+        result=''
+        for j,col in enumerate(dataset):
+            if j < (dataset.shape[1] - 1):
+                #print(dataset[col][i])
+                row.append(float(dataset[col][i]))
+            else:
+                result=dataset[col][i]
         if random.random() > (split/100):
             test.append(row)
             results_test.append(result)
